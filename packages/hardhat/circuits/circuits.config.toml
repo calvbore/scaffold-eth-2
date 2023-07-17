@@ -1,6 +1,5 @@
 [protocol]
 default = "plonk"
-Another = "plonk"
 
 [compiler]
 default = 2
