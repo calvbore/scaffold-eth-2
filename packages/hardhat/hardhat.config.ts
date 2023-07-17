@@ -5,6 +5,10 @@ import "@nomicfoundation/hardhat-toolbox";
 import "hardhat-deploy";
 import "@matterlabs/hardhat-zksync-solc";
 import "@matterlabs/hardhat-zksync-verify";
+import * as fs from "fs";
+import * as toml from "toml";
+import "hardhat-circom";
+import { CircomCircuitUserConfig } from "hardhat-circom";
 
 // If not set, it uses ours Alchemy's default API key.
 // You can get your own at https://dashboard.alchemyapi.io
@@ -96,6 +100,46 @@ const config: HardhatUserConfig = {
       apiKey: `${etherscanApiKey}`,
     },
   },
+  circom: {
+    inputBasePath: "./circuits/",
+    outputBasePath: "./client/",
+    ptau: "powersOfTau28_hez_final_15.ptau",
+    circuits: circuitConfigs(),
+  },
 };
+
+function circuitConfigs(): CircomCircuitUserConfig[] {
+  try {
+    const circuitNames = fs
+      .readdirSync("./circuits/", { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name);
+
+    const circuitConfigs: CircomCircuitUserConfig[] = [];
+
+    const config = toml.parse(fs.readFileSync("./circuits/circuits.config.toml", "utf-8"));
+
+    circuitNames.forEach((name: string, index: any) => {
+      const protocol = config.protocol[name] || config.protocol.default;
+      const compiler = config.compiler[name] || config.compiler.default;
+
+      circuitConfigs[index] = {
+        name: name,
+        version: compiler,
+        protocol: protocol,
+        circuit: `${name}/${name}.circom`,
+        input: `${name}/${name}.json`,
+        r1cs: `${name}.r1cs`,
+        wasm: `${name}.wasm`,
+        vkey: `${name}.vkey.json`,
+        zkey: `${name}.zkey`,
+      };
+    });
+
+    return circuitConfigs;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+}
 
 export default config;

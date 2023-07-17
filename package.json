@@ -15,6 +15,8 @@
     "deploy": "yarn workspace @se-2/hardhat deploy",
     "verify": "yarn workspace @se-2/hardhat verify",
     "compile": "yarn workspace @se-2/hardhat compile",
+    "circom": "yarn workspace @se-2/hardhat circom",
+    "circom:prod": "yarn workspace @se-2/hardhat circom:prod",
     "generate": "yarn workspace @se-2/hardhat generate",
     "hardhat:lint": "yarn workspace @se-2/hardhat lint",
     "hardhat:lint-staged": "yarn workspace @se-2/hardhat lint-staged",
