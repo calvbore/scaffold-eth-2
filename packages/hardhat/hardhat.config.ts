@@ -128,7 +128,7 @@ function circuitConfigs(): CircomCircuitUserConfig[] {
         version: compiler,
         protocol: protocol,
         circuit: `${name}/${name}.circom`,
-        input: `${name}/${name}.json`,
+        input: `${name}/${name}.input.json`,
         r1cs: `${name}.r1cs`,
         wasm: `${name}.wasm`,
         vkey: `${name}.vkey.json`,
