@@ -51,6 +51,49 @@ function getContractDataFromDeployments() {
   return output;
 }
 
+const CIRCUITS_DIR = "./client";
+const PUBLISH_CIRCUITS_DIR = "../nextjs/public/circuits";
+
+function publishCircuitData() {
+  try {
+    const circuitOutputs = fs.readdirSync(CIRCUITS_DIR);
+    if (!fs.existsSync(PUBLISH_CIRCUITS_DIR)) {
+      fs.mkdirSync(PUBLISH_CIRCUITS_DIR);
+    }
+    circuitOutputs.forEach(fileName => {
+      fs.copyFileSync(`${CIRCUITS_DIR}/${fileName}`, `${PUBLISH_CIRCUITS_DIR}/${fileName}`);
+    });
+  } catch (error: any) {
+    console.log(`error publishing circuits to ${PUBLISH_CIRCUITS_DIR}`);
+    throw new Error(error);
+  }
+}
+
+function getCircuitData() {
+  try {
+    const circuitNames = fs
+      .readdirSync("./circuits/", { withFileTypes: true })
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name);
+
+    const circuits: any = {};
+
+    circuitNames.forEach((name: string) => {
+      const vkey = JSON.parse(fs.readFileSync(`${CIRCUITS_DIR}/${name}.vkey.json`, "utf8"));
+      const inputs = JSON.parse(fs.readFileSync(`./circuits/${name}/${name}.input.json`, "utf8"));
+
+      circuits[name] = {
+        inputs: Object.keys(inputs),
+        vkey: vkey,
+      };
+    });
+
+    return circuits;
+  } catch (error: any) {
+    throw new Error(error);
+  }
+}
+
 /**
  * Generates the TypeScript contract definition file based on the json output of the contract deployment scripts
  * This script should be run last.
@@ -74,6 +117,18 @@ const generateTsAbis: DeployFunction = async function () {
   );
 
   console.log(`📝 Updated TypeScript contract definition file on ${TARGET_DIR}deployedContracts.ts`);
+
+  publishCircuitData();
+  console.log(`   Circuit data has been published into nextjs project`);
+
+  const allCircuitData = getCircuitData();
+  fs.writeFileSync(
+    `${TARGET_DIR}publishedCircuits.ts`,
+    prettier.format(`const circuits = ${JSON.stringify(allCircuitData)} as const; \n\n export default circuits`, {
+      parser: "typescript",
+    }),
+  );
+  console.log(`📝 Updated TypeScript circuit definition file on ${TARGET_DIR}publishedCircuits.ts`);
 };
 
 export default generateTsAbis;
