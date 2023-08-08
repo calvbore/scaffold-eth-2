@@ -68,34 +68,23 @@ function publishCircuitData() {
     throw new Error(error);
   }
 }
-
-// Array dimension checker
-// Returns:
-//   false when array dimensions are different
-//   an Array when is rectangular 0d (i.e. an object) or >=1d
 function arrayDimension(a: any): number[] | false {
-  // Make sure it is an array
   if (a instanceof Array) {
-    // First element is an array
     const sublength = arrayDimension(a[0]);
+
     if (sublength === false) {
-      // Dimension is different
       return false;
     } else {
-      // Compare every element to make sure they are of the same dimensions
       for (let i = 1; i < a.length; i++) {
         const _sublength = arrayDimension(a[i]);
-        // HACK: compare arrays...
+
         if (_sublength === false || sublength.join(",") != _sublength.join(",")) {
-          // If the dimension is different (i.e. not rectangular)
           return false;
         }
       }
-      // OK now it is "rectangular" (could you call 3d "rectangular"?)
       return [a.length].concat(sublength);
     }
   } else {
-    // Not an array
     return [];
   }
 }
