@@ -80,7 +80,7 @@ export const CircuitUI = ({ circuitName, className = "" }: CircuitUIProps) => {
                   deployedContractData={deployedContractData}
                   onChange={triggerRefreshDisplayVariables}
                 /> */}
-                <VerifyByContract proofCalldata={proofCalldata} />
+                <VerifyByContract proofCalldata={proofCalldata} inputsObjString={JSON.stringify(inputsObj)} />
               </div>
             </div>
           </div>
