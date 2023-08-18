@@ -60,8 +60,6 @@ export const VerifyOnchain = ({
       // @ts-expect-error
       validity = await contract.read[functionName](proofCalldata);
     }
-    console.log(mutable);
-    console.log(validity);
     setProvedInputsString(inputsObjString);
     setIsVerifiedOnchain(validity);
   };
