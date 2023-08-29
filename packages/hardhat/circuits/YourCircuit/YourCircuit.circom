@@ -7,8 +7,7 @@ template YourCircuit() {
     signal output out;
 
     // Constraints.
-    signal i;
-    i <== in*in;
+    out <== in*in;
 }
 
 component main = YourCircuit();

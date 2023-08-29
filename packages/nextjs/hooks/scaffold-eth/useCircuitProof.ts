@@ -27,7 +27,6 @@ export const useCircuitProof = (name: string, inputsObj: any, vkey: any) => {
     let calldata: any;
     if (protocol === "groth16") calldata = parseGroth16ToSolidityCalldata(proof, publicSignals);
     if (protocol === "plonk") calldata = await parsePlonkToSolidityCalldata(proof, publicSignals);
-    console.log(calldata);
 
     setCircuitProof(proof);
     setCircuitPubSignals(publicSignals);

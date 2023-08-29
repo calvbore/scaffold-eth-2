@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProofValidityIcon } from "./ProofValidityIcon";
 import { useWalletClient } from "wagmi";
-import { useScaffoldContract } from "~~/hooks/scaffold-eth";
+import {
+  useScaffoldContract,
+  /* , useScaffoldContractWrite, useTransactor */
+} from "~~/hooks/scaffold-eth";
 import { ContractName } from "~~/utils/scaffold-eth/contract";
 
 type VerifyOnchainProps = {
@@ -9,10 +12,22 @@ type VerifyOnchainProps = {
   functionName: string;
   mutable: boolean;
   proofCalldata: any;
+  inputsObjString: string;
 };
 
-export const VerifyOnchain = ({ contractName, functionName, mutable, proofCalldata }: VerifyOnchainProps) => {
+export const VerifyOnchain = ({
+  contractName,
+  functionName,
+  mutable,
+  proofCalldata,
+  inputsObjString,
+}: VerifyOnchainProps) => {
   const [isVerifiedOnchain, setIsVerifiedOnchain] = useState<any>();
+  const [provedInputsString, setProvedInputsString] = useState<string>("");
+
+  useEffect(() => {
+    setIsVerifiedOnchain(undefined);
+  }, [functionName]);
 
   const { data: walletClient } = useWalletClient();
   // const publicClient = usePublicClient();
@@ -22,20 +37,30 @@ export const VerifyOnchain = ({ contractName, functionName, mutable, proofCallda
     walletClient,
   });
 
-  // const { data: readContract } = useScaffoldContract({
+  // const { writeAsync, isLoading, isMining } = useScaffoldContractWrite({
   //   contractName: contractName as ContractName,
-  //   publicClient
+  //   functionName: functionName as ExtractAbiFunctionNames<ContractAbi>,
+  //   args: proofCalldata
   // });
+
+  // const writeTxn = useTransactor(walletClient);
 
   const contractVerify = async () => {
     let validity;
     if (mutable == true) {
-      validity = await contract?.write[functionName](proofCalldata);
+      // @ts-expect-error
+      validity = await contract.simulate[functionName](proofCalldata);
+      // @ts-expect-error
+      if (validity.result == true && contract) await contract.write[functionName](proofCalldata);
+      // if (validity.result == true) {
+      //   if (writeAsync) await writeTxn(writeAsync);
+      // }
+      validity = validity.result;
     } else {
-      // validity = await contract?.read[functionName](proofCalldata);
+      // @ts-expect-error
+      validity = await contract.read[functionName](proofCalldata);
     }
-    console.log(mutable);
-    console.log(validity);
+    setProvedInputsString(inputsObjString);
     setIsVerifiedOnchain(validity);
   };
 
@@ -46,8 +71,12 @@ export const VerifyOnchain = ({ contractName, functionName, mutable, proofCallda
           Verify
         </button>
       </div>
-      <div>
-        <ProofValidityIcon isVerified={isVerifiedOnchain} inputsObj={""} provedInputs={""} />
+      <div className={`pl-2`}>
+        <ProofValidityIcon
+          isVerified={isVerifiedOnchain}
+          inputsObj={inputsObjString}
+          provedInputs={provedInputsString}
+        />
       </div>
     </div>
   );
