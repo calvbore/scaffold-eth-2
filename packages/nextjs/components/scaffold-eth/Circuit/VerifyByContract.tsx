@@ -47,9 +47,9 @@ export const VerifyByContract = ({ proofCalldata, inputsObjString }: VerifyByCon
             tabIndex={0}
             className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 overflow-y-scroll"
           >
-            {contractNames.map((name: string) => {
+            {contractNames.map((name: string | number) => {
               const setSelectedToName = () => {
-                setSelectedContract(name);
+                setSelectedContract(name as string);
               };
               return (
                 <li key={`scaf:con:${name}`}>
