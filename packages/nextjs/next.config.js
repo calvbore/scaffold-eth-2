@@ -11,6 +11,7 @@ const nextConfig = {
   },
   webpack: config => {
     config.resolve.fallback = { fs: false, net: false, tls: false, readline: false };
+    config.experiments = { ...config.experiments, topLevelAwait: true };
     return config;
   },
 };
