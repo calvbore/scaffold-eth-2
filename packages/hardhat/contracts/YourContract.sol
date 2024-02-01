@@ -3,6 +3,7 @@ pragma solidity >=0.8.0 <0.9.0;
 
 // Useful for debugging. Remove when deploying to a live network.
 import "hardhat/console.sol";
+import "./YourCircuitVerifier.sol";
 
 // Use openzeppelin to inherit battle-tested implementations (ERC20, ERC721, etc)
 // import "@openzeppelin/contracts/access/Ownable.sol";
@@ -12,7 +13,7 @@ import "hardhat/console.sol";
  * It also allows the owner to withdraw the Ether in the contract
  * @author BuidlGuidl
  */
-contract YourContract {
+contract YourContract is PlonkVerifier {
 	// State Variables
 	address public immutable owner;
 	string public greeting = "Building Unstoppable Apps!!!";
@@ -27,6 +28,8 @@ contract YourContract {
 		bool premium,
 		uint256 value
 	);
+
+	uint256 public poseidonHash;
 
 	// Constructor: Called once on contract deployment
 	// Check packages/hardhat/deploy/00_deploy_your_contract.ts
@@ -78,6 +81,11 @@ contract YourContract {
 	function withdraw() public isOwner {
 		(bool success, ) = owner.call{ value: address(this).balance }("");
 		require(success, "Failed to send Ether");
+	}
+
+	function saveProvedHash(bytes memory proof, uint[] memory pubSignals) public {
+		require(this.verifyProof(proof, pubSignals) == true);
+		poseidonHash = pubSignals[0];
 	}
 
 	/**
