@@ -58,6 +58,12 @@ export const Header = () => {
         </NavLink>
       </li>
       <li>
+        <NavLink href="/hash-tutorial">
+          <VariableIcon className="h-4 w-4" />
+          Hash Tutorial
+        </NavLink>
+      </li>
+      <li>
         <NavLink href="/blockexplorer">
           <MagnifyingGlassIcon className="h-4 w-4" />
           Block Explorer
