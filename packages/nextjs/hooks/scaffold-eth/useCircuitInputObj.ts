@@ -34,18 +34,31 @@ export const useCircuitInputObj = (inputs: any) => {
     return newCircuitInputsObj;
   });
 
-  const updateCircuitInputsObjByKey = (key: string, value: any, location?: number[]) => {
-    if (isNaN(value)) {
-      value = Buffer.from(value);
-      value = "0x" + value.toString("hex");
+  const updateCircuitInputsObjByKey = (key: string | string[], value: any, location?: number[], override?: boolean) => {
+    const newCircuitInputsObj: any = structuredClone(circuitInputsObj);
+
+    if (!Array.isArray(key)) {
+      if (!override && Array.isArray(value)) throw new Error("value cannot be array without setting override");
+
+      if (isNaN(value) && !override) {
+        value = Buffer.from(value);
+        value = "0x" + value.toString("hex");
+      }
+
+      if (!location || !location.length) {
+        newCircuitInputsObj[key] = value;
+      } else {
+        setNestedArrayValue(newCircuitInputsObj[key], value, location);
+      }
+    } else {
+      // setting multiple keys assumes override behaviour for each key
+      if (key.length != value.length) throw new Error("key and value array lengths must match");
+
+      for (let i = 0; i < key.length; i++) {
+        newCircuitInputsObj[key[i]] = value[i];
+      }
     }
 
-    const newCircuitInputsObj: any = structuredClone(circuitInputsObj);
-    if (!location) {
-      newCircuitInputsObj[key] = value;
-    } else {
-      setNestedArrayValue(newCircuitInputsObj[key], value, location);
-    }
     setCircuitInputsObj(newCircuitInputsObj);
   };
 
