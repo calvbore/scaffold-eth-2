@@ -29,8 +29,6 @@ contract YourContract is PlonkVerifier {
 		uint256 value
 	);
 
-	uint256 public poseidonHash;
-
 	// Constructor: Called once on contract deployment
 	// Check packages/hardhat/deploy/00_deploy_your_contract.ts
 	constructor(address _owner) {
@@ -83,13 +81,15 @@ contract YourContract is PlonkVerifier {
 		require(success, "Failed to send Ether");
 	}
 
-	function saveProvedHash(bytes memory proof, uint[] memory pubSignals) public {
-		require(this.verifyProof(proof, pubSignals) == true);
-		poseidonHash = pubSignals[0];
-	}
-
 	/**
 	 * Function that allows the contract to receive ETH
 	 */
 	receive() external payable {}
+
+	// uint256 public poseidonHash;
+
+	// function saveProvedHash(bytes memory proof, uint[] memory pubSignals) public {
+	// 	require(this.verifyProof(proof, pubSignals) == true);
+	// 	poseidonHash = pubSignals[0];
+	// }
 }

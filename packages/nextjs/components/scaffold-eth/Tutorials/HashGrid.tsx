@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useWalletClient } from "wagmi";
 import { ProofValidityIcon } from "~~/components/scaffold-eth";
 import {
@@ -11,6 +13,8 @@ import {
   useScaffoldContractRead,
 } from "~~/hooks/scaffold-eth";
 
+/* eslint-enable @typescript-eslint/no-unused-vars */
+
 export const HashGrid = () => {
   const [location, setLocation] = useState<[number, number] | undefined>();
   const [poseidonHash, updatePoseidonHash] = usePoseidonHash();
@@ -21,28 +25,28 @@ export const HashGrid = () => {
   );
   const [storedHash, setStoredHash] = useLocalStorage<number | undefined>(`storedHash`, undefined);
 
-  const positionCircuitData = usePublishedCircuitInfo("Position");
-  const [circuitInputsObj, updateCircuitInputsObjByKey] = useCircuitInputObj(positionCircuitData.inputs);
-  const [, /*circuitProof*/ provedInputs, , /*circuitPubSignals*/ proofCalldata, isValidProof, generateCircuitProof] =
-    useCircuitProof("Position", circuitInputsObj, positionCircuitData.vkey);
+  // const positionCircuitData = usePublishedCircuitInfo("Position");
+  // const [circuitInputsObj, updateCircuitInputsObjByKey] = useCircuitInputObj(positionCircuitData.inputs);
+  // const [, /*circuitProof*/ provedInputs, , /*circuitPubSignals*/ proofCalldata, isValidProof, generateCircuitProof] =
+  //   useCircuitProof("Position", circuitInputsObj, positionCircuitData.vkey);
 
-  const { data: walletClient } = useWalletClient();
-  const { data: positionGrid } = useScaffoldContract({
-    contractName: "PositionGrid",
-    walletClient,
-  });
+  // const { data: walletClient } = useWalletClient();
+  // const { data: positionGrid } = useScaffoldContract({
+  //   contractName: "PositionGrid",
+  //   walletClient,
+  // });
 
-  const updatePosition = async () => {
-    await positionGrid?.write.updatePosition(
-      // @ts-ignore
-      proofCalldata,
-    );
-  };
+  // const updatePosition = async () => {
+  //   await positionGrid?.write.updatePosition(
+  //     // @ts-ignore
+  //     proofCalldata,
+  //   );
+  // };
 
-  const { data: readPosition } = useScaffoldContractRead({
-    contractName: "PositionGrid",
-    functionName: "position",
-  });
+  // const { data: readPosition } = useScaffoldContractRead({
+  //   contractName: "PositionGrid",
+  //   functionName: "position",
+  // });
 
   function validMove(loc?: number[], mov?: number[]): boolean {
     if (loc == undefined) return false;
@@ -87,12 +91,12 @@ export const HashGrid = () => {
                   // @ts-ignore
                   setLocation([loc, i]);
                   updatePoseidonHash([loc, i]);
-                  updateCircuitInputsObjByKey(
-                    ["newPos", "oldPos", "oldPosHash"],
-                    [[loc, i], !storedLocation ? [0, 0] : storedLocation, storedHash ? storedHash : 0],
-                    [],
-                    true,
-                  );
+                  // updateCircuitInputsObjByKey(
+                  //   ["newPos", "oldPos", "oldPosHash"],
+                  //   [[loc, i], !storedLocation ? [0, 0] : storedLocation, storedHash ? storedHash : 0],
+                  //   [],
+                  //   true,
+                  // );
                 }}
               >
                 {`${loc}, ${i}`}
@@ -106,7 +110,6 @@ export const HashGrid = () => {
         arr.push(<div className="py-2">{populateGrid(dims, index - 1, i)}</div>);
       }
     }
-    console.log(circuitInputsObj);
     return arr;
   }
 
@@ -126,29 +129,29 @@ export const HashGrid = () => {
           <div className="flex items-center justify-center">
             <p className="text-sm">Stored position hash: {storedHash ? storedHash : "0"}</p>
           </div>
-          <div className="flex items-center justify-center">
+          {/* <div className="flex items-center justify-center">
             <p className="text-sm">{`${readPosition}`}</p>
-          </div>
+          </div> */}
           <div className="flex items-center justify-center gap-6">
             <button
               className={`btn btn-secondary btn-sm ${false ? "loading" : ""}`}
               // @ts-ignore
-              onClick={generateCircuitProof}
+              // onClick={generateCircuitProof}
             >
               Generate Proof
             </button>
-            <ProofValidityIcon
+            {/* <ProofValidityIcon
               inputsObj={JSON.stringify(circuitInputsObj)}
               provedInputs={JSON.stringify(provedInputs)}
               isVerified={isValidProof}
-            />
+            /> */}
             <button
               className={`btn btn-secondary btn-sm ${false ? "loading" : ""}`}
-              disabled={!isValidProof || JSON.stringify(circuitInputsObj) != JSON.stringify(provedInputs)}
+              // disabled={!isValidProof || JSON.stringify(circuitInputsObj) != JSON.stringify(provedInputs)}
               onClick={() => {
                 setStoredLocation(location);
                 setStoredHash(poseidonHash);
-                updatePosition();
+                // updatePosition();
               }}
             >
               commit onchain

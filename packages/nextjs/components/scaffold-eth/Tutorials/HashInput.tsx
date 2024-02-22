@@ -1,38 +1,40 @@
 import { useWalletClient } from "wagmi";
-import { InputBase, ProofValidityIcon } from "~~/components/scaffold-eth";
+import { InputBase } from "~~/components/scaffold-eth";
+// import { InputBase, ProofValidityIcon } from "~~/components/scaffold-eth";
 import {
-  useCircuitInputObj,
-  useCircuitProof,
-  usePoseidonHash,
-  usePublishedCircuitInfo,
+  // useCircuitInputObj,
+  // useCircuitProof,
+  // usePoseidonHash,
+  // usePublishedCircuitInfo,
   useScaffoldContract,
 } from "~~/hooks/scaffold-eth";
 
 export const HashInput = () => {
-  const [poseidonHash, updatePoseidonHash] = usePoseidonHash();
+  // const [poseidonHash, updatePoseidonHash] = usePoseidonHash();
 
   const { data: walletClient } = useWalletClient();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: yourContract } = useScaffoldContract({
     contractName: "YourContract",
     walletClient,
   });
 
-  const yourCircuitData = usePublishedCircuitInfo("YourCircuit");
-  const [circuitInputsObj, updateCircuitInputsObjByKey] = useCircuitInputObj(yourCircuitData.inputs);
-  const [, /*circuitProof*/ provedInputs, , /*circuitPubSignals*/ proofCalldata, isValidProof, generateCircuitProof] =
-    useCircuitProof("YourCircuit", circuitInputsObj, yourCircuitData.vkey);
+  // const yourCircuitData = usePublishedCircuitInfo("YourCircuit");
+  // const [circuitInputsObj, updateCircuitInputsObjByKey] = useCircuitInputObj(yourCircuitData.inputs);
+  // const [, /*circuitProof*/ provedInputs, , /*circuitPubSignals*/ proofCalldata, isValidProof, generateCircuitProof] =
+  //   useCircuitProof("YourCircuit", circuitInputsObj, yourCircuitData.vkey);
 
-  const saveProofOnchain = async () => {
-    await yourContract?.write.saveProvedHash(
-      // @ts-ignore
-      proofCalldata,
-    );
-  };
+  // const saveProofOnchain = async () => {
+  //   await yourContract?.write.saveProvedHash(
+  //     // @ts-ignore
+  //     proofCalldata,
+  //   );
+  // };
 
-  function processInput(value: any) {
-    updatePoseidonHash(value);
-    updateCircuitInputsObjByKey("in", value);
-  }
+  // function processInput(value: any) {
+  //   updatePoseidonHash(value);
+  //   updateCircuitInputsObjByKey("in", value);
+  // }
 
   return (
     <div className="z-10">
@@ -45,30 +47,34 @@ export const HashInput = () => {
         <div className="p-5 divide-y divide-base-300">
           {/* Put components in here */}
           <div>
-            <InputBase value={null} onChange={processInput} />
+            {/* eslint-disable-next-line @typescript-eslint/no-empty-function */}
+            <InputBase value={undefined} onChange={() => {}} />
+            {/* <InputBase value={undefined} onChange={processInput} /> */}
           </div>
-          <div className="flex items-center justify-center">
+          {/* <div className="flex items-center justify-center">
             <p className="text-sm">{poseidonHash ? poseidonHash : "empty"}</p>
-          </div>
+          </div> */}
           <div className="flex items-center justify-center gap-6">
             <button
               className="btn btn-secondary btn-sm"
               // @ts-ignore
-              onClick={generateCircuitProof}
+              // onClick={generateCircuitProof}
             >
-              Generate Proof
+              {/* Generate Proof */}
+              Button 1
             </button>
-            <ProofValidityIcon
+            {/* <ProofValidityIcon
               inputsObj={JSON.stringify(circuitInputsObj)}
               provedInputs={JSON.stringify(provedInputs)}
               isVerified={isValidProof}
-            />
+            /> */}
             <button
               className={`btn btn-secondary btn-sm`}
-              disabled={!isValidProof || JSON.stringify(circuitInputsObj) != JSON.stringify(provedInputs)}
-              onClick={saveProofOnchain}
+              // disabled={!isValidProof || JSON.stringify(circuitInputsObj) != JSON.stringify(provedInputs)}
+              // onClick={saveProofOnchain}
             >
-              Commit on chain
+              {/* Commit on chain */}
+              Button 2
             </button>
           </div>
         </div>

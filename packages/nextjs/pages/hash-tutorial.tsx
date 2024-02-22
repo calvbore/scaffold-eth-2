@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
-import { HashGrid, HashInput } from "~~/components/scaffold-eth/Tutorials";
+
+// import { HashGrid, HashInput } from "~~/components/scaffold-eth/Tutorials";
 
 const HashTutorial: NextPage = () => {
   return (
@@ -17,9 +18,9 @@ const HashTutorial: NextPage = () => {
         <div className={`grid grid-cols-1 lg:grid-cols-6 px-6 lg:px-10 lg:gap-12 w-full max-w-7xl my-0`}>
           <div className="col-span-5 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
             <div className="col-span-1 lg:col-span-2 flex flex-col gap-6">
-              <HashInput />
+              {/* <HashInput /> */}
 
-              <HashGrid />
+              {/* <HashGrid /> */}
             </div>
           </div>
         </div>
